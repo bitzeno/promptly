@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <style>
+      :root {
+        --bg: rgba(30, 30, 30, 1);
+        --bg-elevated: rgba(40, 40, 40, 0.98);
+        --text: #e0e0e0;
+        --text-strong: #ffffff;
+        --text-secondary: rgba(255, 255, 255, 0.5);
+        --text-muted: rgba(255, 255, 255, 0.4);
+        --text-faint: rgba(255, 255, 255, 0.25);
+        --text-hint: rgba(255, 255, 255, 0.2);
+        --separator: rgba(255, 255, 255, 0.06);
+        --border: rgba(255, 255, 255, 0.1);
+        --border-subtle: rgba(255, 255, 255, 0.08);
+        --border-strong: rgba(255, 255, 255, 0.12);
+        --surface-hover: rgba(255, 255, 255, 0.04);
+        --surface-active: rgba(255, 255, 255, 0.08);
+        --surface-btn: rgba(255, 255, 255, 0.06);
+        --surface-btn-hover: rgba(255, 255, 255, 0.1);
+        --surface-input: rgba(255, 255, 255, 0.05);
+        --surface-input-focus: rgba(255, 255, 255, 0.07);
+        --scrollbar: rgba(255, 255, 255, 0.1);
+        --scrollbar-hover: rgba(255, 255, 255, 0.18);
+        --accent: rgba(120, 160, 255, 0.7);
+        --accent-focus: rgba(100, 140, 255, 0.4);
+        --accent-bg: rgba(100, 140, 255, 0.2);
+        --accent-bg-hover: rgba(100, 140, 255, 0.3);
+        --accent-border: rgba(100, 140, 255, 0.3);
+        --accent-text: rgba(150, 180, 255, 0.9);
+        --danger-bg: rgba(255, 80, 80, 0.15);
+        --danger-text: rgba(255, 120, 120, 0.95);
+        --shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        --shadow-elevated: 0 8px 24px rgba(0, 0, 0, 0.5);
+        --shadow-drag: 0 4px 16px rgba(0, 0, 0, 0.5);
+      }
+
+      [data-theme="light"] {
+          --bg: rgba(255, 255, 255, 1);
+          --bg-elevated: rgba(255, 255, 255, 0.98);
+          --text: #1d1d1f;
+          --text-strong: #000000;
+          --text-secondary: rgba(0, 0, 0, 0.5);
+          --text-muted: rgba(0, 0, 0, 0.4);
+          --text-faint: rgba(0, 0, 0, 0.3);
+          --text-hint: rgba(0, 0, 0, 0.22);
+          --separator: rgba(0, 0, 0, 0.08);
+          --border: rgba(0, 0, 0, 0.12);
+          --border-subtle: rgba(0, 0, 0, 0.1);
+          --border-strong: rgba(0, 0, 0, 0.15);
+          --surface-hover: rgba(0, 0, 0, 0.03);
+          --surface-active: rgba(0, 0, 0, 0.06);
+          --surface-btn: rgba(0, 0, 0, 0.04);
+          --surface-btn-hover: rgba(0, 0, 0, 0.08);
+          --surface-input: rgba(0, 0, 0, 0.03);
+          --surface-input-focus: rgba(0, 0, 0, 0.05);
+          --scrollbar: rgba(0, 0, 0, 0.12);
+          --scrollbar-hover: rgba(0, 0, 0, 0.22);
+          --accent: rgba(60, 100, 220, 0.8);
+          --accent-focus: rgba(60, 100, 220, 0.45);
+          --accent-bg: rgba(60, 100, 220, 0.1);
+          --accent-bg-hover: rgba(60, 100, 220, 0.18);
+          --accent-border: rgba(60, 100, 220, 0.3);
+          --accent-text: rgba(40, 80, 200, 0.9);
+          --danger-bg: rgba(220, 40, 40, 0.08);
+          --danger-text: rgba(200, 50, 50, 0.9);
+          --shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+          --shadow-elevated: 0 8px 24px rgba(0, 0, 0, 0.12);
+          --shadow-drag: 0 4px 16px rgba(0, 0, 0, 0.1);
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html, body {
+        height: 100%;
+      }
+
+      body {
+        background: transparent;
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text",
+          "Helvetica Neue", sans-serif;
+        display: flex;
+        justify-content: center;
+        padding: 8px;
+        -webkit-app-region: no-drag;
+      }
+
+      #container {
+        width: 100%;
+        height: 100%;
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        box-shadow: var(--shadow);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+
+      #search-bar {
+        padding: 12px 20px 10px 27px;
+        border-bottom: 1px solid var(--separator);
+        flex-shrink: 0;
+        display: flex;
+        gap: 12px;
+        align-items: center;
+      }
+
+      #new-btn {
+        position: relative;
+        background: var(--surface-btn);
+        border: 1px solid var(--border-subtle);
+        border-radius: 6px;
+        color: var(--text-secondary);
+        font-family: inherit;
+        font-size: 13px;
+        font-weight: 500;
+        padding: 7px 10px;
+        cursor: default;
+        white-space: nowrap;
+        flex-shrink: 0;
+        order: 2;
+        margin-left: 8px;
+      }
+
+      #new-btn::before {
+        content: "";
+        position: absolute;
+        left: -14px;
+        top: 2px;
+        bottom: 2px;
+        width: 1px;
+        background: var(--border-subtle);
+      }
+
+      #new-btn:hover {
+        background: var(--surface-btn-hover);
+        color: var(--text);
+      }
+
+      #new-btn:focus {
+        outline: none;
+        border-color: var(--accent-focus);
+        background: var(--surface-input-focus);
+      }
+
+      #search {
+        width: 100%;
+        background: transparent;
+        border: none;
+        padding: 8px 0;
+        color: var(--text);
+        font-family: inherit;
+        font-size: 15px;
+        font-weight: 400;
+        outline: none;
+        order: 0;
+      }
+
+      #search::placeholder {
+        color: var(--text-faint);
+      }
+
+      #no-results {
+        color: var(--text-faint);
+        font-size: 13px;
+        padding: 20px 14px;
+        text-align: center;
+      }
+
+      #options {
+        flex: 1;
+        overflow-y: auto;
+        padding: 0;
+      }
+
+      #options::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      #options::-webkit-scrollbar-track {
+        background: transparent;
+      }
+
+      #options::-webkit-scrollbar-thumb {
+        background: var(--scrollbar);
+        border-radius: 3px;
+      }
+
+      #options::-webkit-scrollbar-thumb:hover {
+        background: var(--scrollbar-hover);
+      }
+
+      .option {
+        position: relative;
+        padding: 10px 24px 10px 24px;
+        color: var(--text);
+        cursor: default;
+        border-radius: 0;
+        margin: 0;
+        border-bottom: 1px solid var(--separator);
+        border-left: 3px solid transparent;
+        transition: background 0.12s ease, border-color 0.12s ease;
+      }
+
+      .option:hover {
+        background: var(--surface-hover);
+      }
+
+      .option.selected {
+        background: var(--surface-active);
+        border-left-color: var(--accent);
+      }
+
+      .option.sortable-ghost {
+        visibility: hidden;
+      }
+
+      .option.sortable-chosen {
+        background: var(--surface-active);
+      }
+
+      .option.sortable-fallback {
+        background: var(--bg-elevated) !important;
+        opacity: 1 !important;
+        box-shadow: var(--shadow-drag);
+        border: 1px solid var(--border-strong) !important;
+        border-radius: 8px;
+      }
+
+      .option-top {
+        display: flex;
+        align-items: center;
+        margin-bottom: 4px;
+      }
+
+      .option-name {
+        font-weight: 600;
+        font-size: 14px;
+        letter-spacing: 0.2px;
+      }
+
+      .option.selected .option-name {
+        color: var(--text-strong);
+      }
+
+      .option-text {
+        color: var(--text-muted);
+        font-size: 12px;
+        line-height: 1.4;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .option.selected .option-text {
+        color: var(--text-secondary);
+      }
+
+      .option-menu-wrap {
+        position: absolute;
+        top: 8px;
+        right: 12px;
+      }
+
+      .option-menu-btn {
+        background: none;
+        border: none;
+        color: var(--text-faint);
+        font-size: 16px;
+        line-height: 1;
+        padding: 2px 6px;
+        border-radius: 4px;
+        cursor: default;
+        outline: none;
+        letter-spacing: 1px;
+        visibility: hidden;
+      }
+
+      .option.selected .option-menu-btn,
+      .option:hover .option-menu-btn {
+        visibility: visible;
+      }
+
+      .option-menu-btn:hover {
+        background: var(--surface-btn-hover);
+        color: var(--text);
+      }
+
+      .option-dropdown {
+        display: none;
+        position: absolute;
+        right: 0;
+        top: 100%;
+        margin-top: 4px;
+        background: var(--bg-elevated);
+        border: 1px solid var(--border-strong);
+        border-radius: 8px;
+        padding: 4px;
+        min-width: 120px;
+        z-index: 100;
+        box-shadow: var(--shadow-elevated);
+      }
+
+      .option-dropdown.open {
+        display: block;
+      }
+
+      .option-dropdown-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        width: 100%;
+        background: none;
+        border: none;
+        color: var(--text);
+        font-family: inherit;
+        font-size: 12px;
+        padding: 6px 10px;
+        border-radius: 5px;
+        cursor: default;
+        outline: none;
+        text-align: left;
+      }
+
+      .option-dropdown-item:hover {
+        background: var(--surface-active);
+        color: var(--text-strong);
+      }
+
+      .option-dropdown-item.delete:hover {
+        background: var(--danger-bg);
+        color: var(--danger-text);
+      }
+
+      .option-dropdown-item kbd {
+        margin-left: auto;
+        color: var(--text-faint);
+      }
+
+      /* New prompt form */
+      #form {
+        display: none;
+        padding: 16px 24px;
+        flex: 1;
+        flex-direction: column;
+        overflow-y: auto;
+      }
+
+      #form.active {
+        display: flex;
+      }
+
+      #form-title {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--text-strong);
+        margin-bottom: 16px;
+      }
+
+      .form-group {
+        margin-bottom: 14px;
+      }
+
+      .form-group:last-of-type {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 16px;
+      }
+
+      #form label {
+        display: block;
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 6px;
+      }
+
+      #form input,
+      #form textarea {
+        width: 100%;
+        background: var(--surface-input);
+        border: 1px solid var(--border-subtle);
+        border-radius: 6px;
+        padding: 9px 12px;
+        color: var(--text);
+        font-family: inherit;
+        font-size: 13px;
+        outline: none;
+        resize: none;
+      }
+
+      #form-name {
+        font-size: 15px;
+        font-weight: 500;
+      }
+
+      #form input:focus,
+      #form textarea:focus {
+        border-color: var(--accent-focus);
+        background: var(--surface-input-focus);
+      }
+
+      #form textarea {
+        flex: 1;
+        min-height: 80px;
+        line-height: 1.6;
+      }
+
+      #form-buttons {
+        display: flex;
+        gap: 8px;
+        justify-content: flex-end;
+      }
+
+      #form-buttons button {
+        font-family: inherit;
+        font-size: 13px;
+        font-weight: 500;
+        padding: 8px 18px;
+        border-radius: 6px;
+        cursor: default;
+        outline: none;
+      }
+
+      #form-cancel {
+        background: var(--surface-btn);
+        border: 1px solid var(--border-subtle);
+        color: var(--text-secondary);
+      }
+
+      #form-cancel:hover {
+        background: var(--surface-btn-hover);
+        color: var(--text);
+      }
+
+      #form-cancel:focus {
+        border-color: var(--accent-focus);
+      }
+
+      #form-save {
+        background: var(--accent-bg);
+        border: 1px solid var(--accent-border);
+        color: var(--accent-text);
+      }
+
+      #form-save:hover {
+        background: var(--accent-bg-hover);
+        color: var(--text-strong);
+      }
+
+      #form-save:focus {
+        border-color: var(--accent-focus);
+      }
+
+      #hint {
+        color: var(--text-hint);
+        font-size: 11px;
+        padding: 8px 20px;
+        border-top: 1px solid var(--separator);
+        display: flex;
+        align-items: center;
+        flex-shrink: 0;
+      }
+
+      #theme-toggle {
+        background: none;
+        border: none;
+        color: var(--text-faint);
+        font-size: 14px;
+        cursor: default;
+        padding: 2px 4px;
+        border-radius: 4px;
+        outline: none;
+        flex-shrink: 0;
+        line-height: 1;
+      }
+
+      #theme-toggle:hover {
+        color: var(--text);
+        background: var(--surface-btn-hover);
+      }
+
+      #hint-keys {
+        display: flex;
+        gap: 16px;
+        justify-content: center;
+        flex: 1;
+      }
+
+      kbd {
+        background: var(--surface-active);
+        border-radius: 3px;
+        padding: 1px 5px;
+        font-family: inherit;
+        font-size: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <script src="./node_modules/sortablejs/Sortable.min.js"></script>
+    <div id="container">
+      <div id="search-bar">
+        <input id="search" type="text" placeholder="Search prompts..." autofocus />
+        <button id="new-btn">+ New</button>
+      </div>
+      <div id="options"></div>
+      <div id="form">
+        <div id="form-title">New Prompt</div>
+        <div class="form-group">
+          <label for="form-name">Name</label>
+          <input id="form-name" type="text" placeholder="e.g. Review PR" />
+        </div>
+        <div class="form-group">
+          <label for="form-text">Prompt</label>
+          <textarea id="form-text" placeholder="What should this prompt do?"></textarea>
+        </div>
+        <div id="form-buttons">
+          <button id="form-cancel">Cancel</button>
+          <button id="form-save">Save</button>
+        </div>
+      </div>
+      <div id="hint">
+        <button id="theme-toggle"></button>
+        <div id="hint-keys"></div>
+      </div>
+    </div>
+    <script>
+      let selectedIndex = 0;
+      let filtered = [];
+      let formMode = false;
+      let editingId = null; // null = create mode, number = edit mode
+      let sortable = null;
+      const searchInput = document.getElementById("search");
+      const formEl = document.getElementById("form");
+      const optionsEl = document.getElementById("options");
+      const searchBarEl = document.getElementById("search-bar");
+      const hintEl = document.getElementById("hint");
+      const formName = document.getElementById("form-name");
+      const formText = document.getElementById("form-text");
+      const themeToggle = document.getElementById("theme-toggle");
+      const hintKeys = document.getElementById("hint-keys");
+
+      let currentTheme = "dark";
+
+      async function initTheme() {
+        currentTheme = await window.promptly.getTheme();
+        applyTheme();
+      }
+
+      function applyTheme() {
+        document.documentElement.setAttribute("data-theme", currentTheme);
+        themeToggle.textContent = currentTheme === "dark" ? "\u2600\uFE0E" : "\u263E\uFE0E";
+      }
+
+      async function toggleTheme() {
+        currentTheme = currentTheme === "dark" ? "light" : "dark";
+        applyTheme();
+        await window.promptly.setTheme(currentTheme);
+      }
+
+      themeToggle.addEventListener("click", (e) => {
+        e.stopPropagation();
+        toggleTheme();
+      });
+
+
+      function enterFormMode(prompt) {
+        formMode = true;
+        editingId = prompt ? prompt.id : null;
+        optionsEl.style.display = "none";
+        searchBarEl.style.display = "none";
+        formEl.classList.add("active");
+        document.getElementById("form-title").textContent = prompt ? "Edit Prompt" : "New Prompt";
+        formName.value = prompt ? prompt.name : "";
+        formText.value = prompt ? prompt.text : "";
+        formName.focus();
+        updateHint();
+      }
+
+      function exitFormMode() {
+        formMode = false;
+        formEl.classList.remove("active");
+        optionsEl.style.display = "";
+        searchBarEl.style.display = "";
+        searchInput.focus();
+        updateHint();
+      }
+
+      async function saveForm() {
+        const name = formName.value.trim();
+        const text = formText.value.trim();
+        if (!name || !text) return;
+        if (editingId !== null) {
+          await window.promptly.updatePrompt(editingId, name, text);
+        } else {
+          await window.promptly.createPrompt(name, text);
+          selectedIndex = 0;
+          searchInput.value = "";
+        }
+        exitFormMode();
+        await renderPrompts();
+      }
+
+      async function deleteSelected() {
+        if (filtered.length === 0) return;
+        const prompt = filtered[selectedIndex];
+        await window.promptly.deletePrompt(prompt.id);
+        await renderPrompts();
+      }
+
+      function updateHint() {
+        if (formMode) {
+          hintKeys.innerHTML =
+            '<span><kbd>⌘⏎</kbd> save</span><span><kbd>esc</kbd> cancel</span>';
+        } else {
+          hintKeys.innerHTML =
+            '<span><kbd>⏎</kbd> paste</span><span><kbd>⌘N</kbd> new</span><span><kbd>⌘↑↓</kbd> move</span>';
+        }
+      }
+
+      updateHint();
+
+      function closeAllMenus() {
+        document.querySelectorAll(".option-dropdown.open").forEach((d) => d.classList.remove("open"));
+      }
+
+      document.addEventListener("click", () => {
+        closeAllMenus();
+      });
+
+      document.getElementById("new-btn").addEventListener("click", (e) => {
+        e.stopPropagation();
+        enterFormMode();
+      });
+
+      document.getElementById("form-cancel").addEventListener("click", () => {
+        exitFormMode();
+      });
+
+      document.getElementById("form-save").addEventListener("click", () => {
+        saveForm();
+      });
+
+      async function getFiltered() {
+        const query = searchInput.value.trim();
+        if (query) {
+          return await window.promptly.searchPrompts(query);
+        }
+        return await window.promptly.getAllPrompts();
+      }
+
+      async function renderPrompts() {
+        filtered = await getFiltered();
+        selectedIndex = Math.min(selectedIndex, Math.max(0, filtered.length - 1));
+
+        const container = document.getElementById("options");
+        container.innerHTML = "";
+
+        if (filtered.length === 0) {
+          const msg = document.createElement("div");
+          msg.id = "no-results";
+          msg.textContent = "No matching prompts";
+          container.appendChild(msg);
+          return;
+        }
+
+        filtered.forEach((item, i) => {
+          const div = document.createElement("div");
+          div.className = "option" + (i === selectedIndex ? " selected" : "");
+
+          const top = document.createElement("div");
+          top.className = "option-top";
+
+          const name = document.createElement("span");
+          name.className = "option-name";
+          name.textContent = item.name;
+
+          top.appendChild(name);
+
+          div.appendChild(top);
+
+          const menuWrap = document.createElement("div");
+          menuWrap.className = "option-menu-wrap";
+
+          const menuBtn = document.createElement("button");
+          menuBtn.className = "option-menu-btn";
+          menuBtn.textContent = "\u22EE";
+          menuBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            const dd = menuWrap.querySelector(".option-dropdown");
+            const isOpen = dd.classList.contains("open");
+            closeAllMenus();
+            if (!isOpen) dd.classList.add("open");
+          });
+
+          const dropdown = document.createElement("div");
+          dropdown.className = "option-dropdown";
+
+          const editItem = document.createElement("button");
+          editItem.className = "option-dropdown-item";
+          editItem.innerHTML = 'Edit<kbd>\u2318E</kbd>';
+          editItem.addEventListener("click", (e) => {
+            e.stopPropagation();
+            closeAllMenus();
+            enterFormMode(item);
+          });
+
+          const deleteItem = document.createElement("button");
+          deleteItem.className = "option-dropdown-item delete";
+          deleteItem.innerHTML = 'Delete<kbd>\u2318\u232B</kbd>';
+          deleteItem.addEventListener("click", (e) => {
+            e.stopPropagation();
+            closeAllMenus();
+            window.promptly.deletePrompt(item.id).then(() => renderPrompts());
+          });
+
+          dropdown.appendChild(editItem);
+          dropdown.appendChild(deleteItem);
+          menuWrap.appendChild(menuBtn);
+          menuWrap.appendChild(dropdown);
+          div.appendChild(menuWrap);
+
+          const text = document.createElement("div");
+          text.className = "option-text";
+          text.textContent = item.text;
+
+          div.appendChild(text);
+          container.appendChild(div);
+
+          div.addEventListener("click", () => {
+            selectedIndex = i;
+            renderPrompts();
+          });
+
+          if (i === selectedIndex) {
+            div.scrollIntoView({ block: "nearest" });
+          }
+        });
+
+        initSortable();
+      }
+
+      function initSortable() {
+        if (sortable) sortable.destroy();
+        const container = document.getElementById("options");
+        if (filtered.length === 0) return;
+
+        sortable = Sortable.create(container, {
+          forceFallback: true,
+          animation: 150,
+          ghostClass: "sortable-ghost",
+          chosenClass: "sortable-chosen",
+          filter: ".option-menu-btn, .option-dropdown",
+          preventOnFilter: false,
+          onEnd: async (evt) => {
+            if (evt.oldIndex === evt.newIndex) return;
+            const moved = filtered.splice(evt.oldIndex, 1)[0];
+            filtered.splice(evt.newIndex, 0, moved);
+            selectedIndex = evt.newIndex;
+            await window.promptly.reorderPrompts(filtered.map((p) => p.id));
+            await renderPrompts();
+          },
+        });
+      }
+
+      // Initialize
+      (async () => {
+        await initTheme();
+        await renderPrompts();
+
+        requestAnimationFrame(() => {
+          const height = document.body.scrollHeight + 16;
+          window.promptly.resize(height);
+          window.promptly.ready();
+        });
+      })();
+
+      searchInput.addEventListener("input", async () => {
+        selectedIndex = 0;
+        await renderPrompts();
+      });
+
+      document.addEventListener("keydown", async (e) => {
+        // Form mode keys
+        if (formMode) {
+          if (e.key === "Enter" && e.metaKey) {
+            e.preventDefault();
+            await saveForm();
+          } else if (e.key === "Escape") {
+            e.preventDefault();
+            exitFormMode();
+          }
+          return;
+        }
+
+        // List mode keys
+        if (e.key === "e" && e.metaKey) {
+          e.preventDefault();
+          if (filtered.length > 0) {
+            enterFormMode(filtered[selectedIndex]);
+          }
+        } else if (e.key === "Backspace" && e.metaKey) {
+          e.preventDefault();
+          await deleteSelected();
+        } else if (e.key === "n" && e.metaKey) {
+          e.preventDefault();
+          enterFormMode();
+        } else if (e.key === "ArrowDown" && e.metaKey) {
+          e.preventDefault();
+          if (filtered.length > 1 && selectedIndex < filtered.length - 1 && !searchInput.value.trim()) {
+            const moved = filtered.splice(selectedIndex, 1)[0];
+            selectedIndex++;
+            filtered.splice(selectedIndex, 0, moved);
+            await window.promptly.reorderPrompts(filtered.map((p) => p.id));
+            await renderPrompts();
+          }
+        } else if (e.key === "ArrowUp" && e.metaKey) {
+          e.preventDefault();
+          if (filtered.length > 1 && selectedIndex > 0 && !searchInput.value.trim()) {
+            const moved = filtered.splice(selectedIndex, 1)[0];
+            selectedIndex--;
+            filtered.splice(selectedIndex, 0, moved);
+            await window.promptly.reorderPrompts(filtered.map((p) => p.id));
+            await renderPrompts();
+          }
+        } else if (e.key === "ArrowDown") {
+          e.preventDefault();
+          if (filtered.length > 0) {
+            selectedIndex = (selectedIndex + 1) % filtered.length;
+            await renderPrompts();
+          }
+        } else if (e.key === "ArrowUp") {
+          e.preventDefault();
+          if (filtered.length > 0) {
+            selectedIndex = (selectedIndex - 1 + filtered.length) % filtered.length;
+            await renderPrompts();
+          }
+        } else if (e.key === "Enter") {
+          if (document.activeElement === document.getElementById("new-btn")) {
+            e.preventDefault();
+            enterFormMode();
+          } else if (filtered.length > 0) {
+            window.promptly.submit(filtered[selectedIndex].text);
+          }
+        } else if (e.key === "Escape") {
+          window.promptly.escape();
+        }
+      });
+    </script>
+  </body>
+</html>

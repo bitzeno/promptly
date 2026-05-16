@@ -1,0 +1,47 @@
+{
+  "name": "promptly",
+  "version": "1.0.0",
+  "description": "Quick-access prompt manager",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "rebuild": "electron-rebuild",
+    "dist": "electron-builder --mac --universal"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "build": {
+    "appId": "com.promptly.app",
+    "productName": "Promptly",
+    "mac": {
+      "target": "dmg",
+      "category": "public.app-category.productivity"
+    },
+    "files": [
+      "main.js",
+      "index.html",
+      "db.js",
+      "preload.js",
+      "build/Release/paste.node",
+      "node_modules/better-sqlite3/**",
+      "node_modules/sortablejs/**",
+      "node_modules/node-addon-api/**",
+      "node_modules/bindings/**",
+      "node_modules/file-uri-to-path/**"
+    ],
+    "afterSign": null,
+    "npmRebuild": true
+  },
+  "devDependencies": {
+    "@electron/rebuild": "^4.0.3",
+    "electron": "^41.0.3",
+    "electron-builder": "^26.8.1",
+    "electron-reloader": "^1.2.3"
+  },
+  "dependencies": {
+    "better-sqlite3": "^12.8.0",
+    "node-addon-api": "^8.6.0",
+    "sortablejs": "^1.15.7"
+  }
+}
