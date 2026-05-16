@@ -1,12 +1,12 @@
 # Promptly
 
-A quick-access prompt manager for macOS. Press `Cmd+Shift+Space` from anywhere, pick a prompt, and it pastes into the app you were just using.
+Stop retyping the same prompts into ChatGPT, Claude, Cursor, and every other AI tool. Promptly keeps your library one keystroke away — hit `Cmd+Shift+Space`, pick a prompt, and it pastes straight into whatever app you were just in.
 
 ![Promptly](assets/screenshot.png)
 
 ## How it works
 
-Promptly runs in the background as a dock-less utility. The global shortcut summons a floating search window that stays above other windows (including fullscreen apps). Selecting a prompt copies it to the clipboard, refocuses the previously active app, and simulates `Cmd+V`.
+Promptly runs in the background as a dock-less utility. The global shortcut summons a floating search window that stays above other windows (including fullscreen apps). Selecting a prompt copies it to the clipboard, refocuses the previously active app, and simulates `Cmd+V` — so your prompt lands in the chat box you were already typing in.
 
 Prompts are stored locally in SQLite under the Electron `userData` directory. Nothing leaves your machine.
 
